@@ -1,0 +1,9 @@
+{
+  "printWidth": 100,
+  "semi": true,
+  "singleQuote": false,
+  "htmlWhitespaceSensitivity": "ignore",
+  "ignorePath": ".prettierignore",
+  "stylelintIntegration": false,
+  "trailingComma": "all"
+}
