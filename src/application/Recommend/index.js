@@ -5,19 +5,20 @@ import { forceCheck } from "react-lazyload";
 import Slider from "../../components/slider";
 import RecommendList from "../../components/list";
 import Scroll from "../../baseUI/scroll";
+import Loading from "../../baseUI/loading";
 
 import * as actionTypes from "./store/actionCreators";
 
 import { Content } from "./style";
 
 function Recommend(props) {
-  const { bannerList, recommendList } = props;
+  const { bannerList, recommendList, enterLoading } = props;
 
   const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
 
   useEffect(() => {
-    getBannerDataDispatch();
-    getRecommendListDataDispatch();
+    !bannerList.size && getBannerDataDispatch();
+    !recommendList.size && getRecommendListDataDispatch();
   }, []);
 
   const bannerListJS = bannerList ? bannerList.toJS() : [];
@@ -31,6 +32,7 @@ function Recommend(props) {
           <RecommendList recommendList={recommendListJS}></RecommendList>
         </div>
       </Scroll>
+      {enterLoading ? <Loading></Loading> : null}
     </Content>
   );
 }
@@ -38,6 +40,7 @@ function Recommend(props) {
 const mapStateToProps = state => ({
   bannerList: state.getIn(["recommend", "bannerList"]),
   recommendList: state.getIn(["recommend", "recommendList"]),
+  enterLoading: state.getIn(["recommend", "enterLoading"]),
 });
 
 const mapDispatchToProps = dispatch => {
