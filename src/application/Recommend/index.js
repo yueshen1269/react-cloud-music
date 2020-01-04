@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { forceCheck } from "react-lazyload";
+import { renderRoutes } from 'react-router-config';
 
 import Slider from "../../components/slider";
 import RecommendList from "../../components/list";
@@ -19,7 +20,7 @@ function Recommend(props) {
   useEffect(() => {
     !bannerList.size && getBannerDataDispatch();
     !recommendList.size && getRecommendListDataDispatch();
-  }, []);
+  }, [bannerList.size, getBannerDataDispatch, getRecommendListDataDispatch, recommendList.size]);
 
   const bannerListJS = bannerList ? bannerList.toJS() : [];
   const recommendListJS = recommendList ? recommendList.toJS() : [];
@@ -33,6 +34,7 @@ function Recommend(props) {
         </div>
       </Scroll>
       {enterLoading ? <Loading></Loading> : null}
+      { renderRoutes (props.route.children) }
     </Content>
   );
 }
