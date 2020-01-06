@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { connect } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 

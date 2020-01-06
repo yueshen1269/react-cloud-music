@@ -24,7 +24,7 @@ export const debounce = (func, delay) => {
   };
 };
 
-//处理数据，找出第一个没有歌名的排行榜的索引
+// 处理数据，找出第一个没有歌名的排行榜的索引
 export const filterIndex = rankList => {
   for (let i = 0; i < rankList.length - 1; i++) {
     if (rankList[i].tracks.length && !rankList[i + 1].tracks.length) {
@@ -33,10 +33,20 @@ export const filterIndex = rankList => {
   }
 };
 
-//找出排行榜的编号
+// 找出排行榜的编号
 export const filterIdx = name => {
   for (var key in RankTypes) {
     if (RankTypes[key] === name) return key;
   }
   return null;
+};
+
+// 处理歌手列表拼接歌手名字
+export const getName = list => {
+  let str = "";
+  list.map((item, index) => {
+    str += index === 0 ? item.name : "/" + item.name;
+    return item;
+  });
+  return str;
 };
