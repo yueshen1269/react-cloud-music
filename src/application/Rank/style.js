@@ -71,5 +71,7 @@ export const SongList = styled.ul`
   > li {
     font-size: ${style["font-size-s"]};
     color: grey;
+    max-width: 63vw;
+    ${style.noWrap()}
   }
 `;
