@@ -213,4 +213,7 @@ export const RankTypes = {
   "23": "江小白YOLO云音乐说唱榜",
 };
 
+//顶部的高度
+export const HEADER_HEIGHT = 45;
+
 export { axiosInstance };
