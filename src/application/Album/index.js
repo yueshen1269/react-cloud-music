@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import Header from "./../../baseUI/header/index";
 import Scroll from "../../baseUI/scroll/index";
 import Loading from "../../baseUI/loading/index";
+import MusicNote from "../../baseUI/music-note/index";
+import SongsList from "../SongsList";
 
 import { getCount, getName, isEmptyObject } from "./../../api/utils";
 import { getAlbumList, changeEnterLoading } from "./store/actionCreators";
@@ -22,6 +24,11 @@ function Album(props) {
   const id = props.match.params.id;
   const { getAlbumDataDispatch } = props;
   const headerEl = useRef();
+  const musicNoteRef = useRef();
+
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
 
   useEffect(() => {
     getAlbumDataDispatch(id);
@@ -105,8 +112,14 @@ function Album(props) {
 
   const renderSongList = () => {
     return (
-      <SongList>
-        <div className="first_line">
+      <SongsList
+        songs={currentAlbum.tracks}
+        collectCount={currentAlbum.subscribedCount}
+        showCollect={true}
+        showBackground={true}
+        musicAnimation={musicAnimation}
+      >
+        {/* <div className="first_line">
           <div className="play_all">
             <i className="iconfont">&#xe6e3;</i>
             <span>
@@ -133,8 +146,8 @@ function Album(props) {
               </li>
             );
           })}
-        </SongItem>
-      </SongList>
+        </SongItem> */}
+      </SongsList>
     );
   };
 
@@ -164,6 +177,7 @@ function Album(props) {
           </Scroll>
         ) : null}
         {enterLoading ? <Loading></Loading> : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   );

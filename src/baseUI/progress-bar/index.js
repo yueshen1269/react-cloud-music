@@ -38,10 +38,24 @@ const ProgressBarWrapper = styled.div`
 
 function ProgressBar(props) {
   const { percentChange } = props;
+  const { percent } = props;
+
   const progressBar = useRef();
   const progress = useRef();
   const progressBtn = useRef();
   const [touch, setTouch] = useState({});
+
+  // 监听 percent
+  useEffect(() => {
+    if (percent >= 0 && percent <= 1 && !touch.initiated) {
+      const barWidth = progressBar.current.clientWidth - progressBtnWidth;
+      const offsetWidth = percent * barWidth;
+      progress.current.style.width = `${offsetWidth} px`;
+      progressBtn.current.style["transform"] = `translate3d(${offsetWidth}px, 0, 0)`;
+    }
+    //eslint-disable-next-line
+  }, [percent]);
+
   const progressBtnWidth = 16;
   const _offset = offsetWidth => {
     progress.current.style.width = `${offsetWidth}px`;

@@ -5,10 +5,9 @@ import { getName } from "../../../api/utils";
 import { MiniPlayerContainer } from "./style";
 
 function MiniPlayer(props) {
-  const { song, fullScreen } = props;
-  const { toggleFullScreen } = props;
+  const { song, fullScreen, playing, percent } = props;
+  const { clickPlaying, setFullScreen, toggleFullScreen } = props;
   const miniPlayerRef = useRef();
-  let percent = 0.2;
   return (
     <CSSTransition
       in={!fullScreen}
@@ -24,7 +23,13 @@ function MiniPlayer(props) {
       <MiniPlayerContainer ref={miniPlayerRef} onClick={() => toggleFullScreen(true)}>
         <div className="icon">
           <div className="imgWrapper">
-            <img className="play" src={song.al.picUrl} width="40" height="40" alt="img" />
+            <img
+              className={`play ${playing ? "" : "pause"}`}
+              src={song.al.picUrl}
+              width="40"
+              height="40"
+              alt="img"
+            />
           </div>
         </div>
         <div className="text">
@@ -33,7 +38,15 @@ function MiniPlayer(props) {
         </div>
         <div className="control">
           <ProgressCircle radius={32} percent={percent}>
-            <i className="icon-mini iconfont icon-pause">&#xe650;</i>
+            {playing ? (
+              <i className="icon-mini iconfont icon-pause" onClick={e => clickPlaying(e, false)}>
+                &#xe650;
+              </i>
+            ) : (
+              <i className="icon-mini iconfont icon-play" onClick={e => clickPlaying(e, true)}>
+                &#xe61e;
+              </i>
+            )}
           </ProgressCircle>
         </div>
         <div className="control">
