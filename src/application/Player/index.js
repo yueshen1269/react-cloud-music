@@ -11,6 +11,7 @@ import {
 } from "./store/actionCreators";
 import MiniPlayer from "./miniPlayer";
 import NormalPlayer from "./normalPlayer";
+import PlayList from "./play-list";
 import Toast from "./../../baseUI/toast/index";
 
 import { playMode } from "../../api/config";
@@ -34,6 +35,7 @@ function Player(props) {
     changeCurrentDispatch,
     changePlayListDispatch, // 改变 playList
     changeModeDispatch, // 改变 mode
+    togglePlayListDispatch,
   } = props;
 
   const playList = immutablePlayList.toJS();
@@ -47,6 +49,7 @@ function Player(props) {
   // 记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
   const [preSong, setPreSong] = useState({});
   const [modeText, setModeText] = useState("");
+  const [songReady, setSongReady] = useState(true);
   // 歌曲播放进度
   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
@@ -61,21 +64,24 @@ function Player(props) {
       !playList.length ||
       currentIndex === -1 ||
       !playList[currentIndex] ||
-      playList[currentIndex].id === preSong.id
-      // !songReady
+      playList[currentIndex].id === preSong.id ||
+      !songReady
     )
       return;
-    changeCurrentIndexDispatch(currentIndex); //currentIndex 默认为 - 1，临时改成 0
     let current = playList[currentIndex];
+    setPreSong(current);
+    setSongReady(false); // 把标志位置为 false, 表示现在新的资源没有缓冲完成，不能切歌
     changeCurrentDispatch(current); // 赋值 currentSong
     audioRef.current.src = getSongUrl(current.id);
     setTimeout(() => {
-      audioRef.current.play();
+      audioRef.current.play().then(() => {
+        setSongReady(true);
+      });
     });
     togglePlayingDispatch(true); // 播放状态
     setCurrentTime(0); // 从头开始播放
     setDuration((current.dt / 1000) | 0); // 时长
-  }, [immutablePlayList, currentIndex]);
+  }, [playList, currentIndex]);
 
   useEffect(() => {
     playing ? audioRef.current.play() : audioRef.current.pause();
@@ -157,6 +163,12 @@ function Player(props) {
       handleNext();
     }
   };
+
+  const handleError = () => {
+    songReady.current = true;
+    alert("播放出错");
+  };
+
   return (
     <div>
       {isEmptyObject(currentSong) ? null : (
@@ -167,6 +179,7 @@ function Player(props) {
           fullScreen={fullScreen}
           clickPlaying={clickPlaying}
           toggleFullScreen={toggleFullScreenDispatch}
+          togglePlayList={togglePlayListDispatch}
         />
       )}
       {isEmptyObject(currentSong) ? null : (
@@ -184,9 +197,16 @@ function Player(props) {
           handleNext={handleNext}
           mode={mode}
           changeMode={changeMode}
+          togglePlayList={togglePlayListDispatch}
         />
       )}
-      <audio ref={audioRef} onTimeUpdate={updateTime} onEnded={handleEnd}></audio>
+      <audio
+        ref={audioRef}
+        onTimeUpdate={updateTime}
+        onEnded={handleEnd}
+        onError={handleError}
+      ></audio>
+      <PlayList></PlayList>
       <Toast text={modeText} ref={toastRef}></Toast>
     </div>
   );

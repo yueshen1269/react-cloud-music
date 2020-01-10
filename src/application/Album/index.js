@@ -17,7 +17,7 @@ import style from "../../assets/global-style";
 export const HEADER_HEIGHT = 45;
 
 function Album(props) {
-  const { currentAlbum: currentAlbumImmutable, enterLoading } = props;
+  const { currentAlbum: currentAlbumImmutable, enterLoading, songsCount } = props;
   const [showStatus, setShowStatus] = useState(true);
   const [title, setTitle] = useState("歌单");
   const [isMarquee, setIsMarquee] = useState(false); // 是否跑马灯
@@ -160,7 +160,7 @@ function Album(props) {
       unmountOnExit
       onExited={props.history.goBack}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header
           ref={headerEl}
           title={title}
@@ -186,6 +186,7 @@ function Album(props) {
 const mapStateToProps = state => ({
   currentAlbum: state.getIn(["album", "currentAlbum"]),
   enterLoading: state.getIn(["album", "enterLoading"]),
+  songsCount: state.getIn(["player", "playList"]).size,
 });
 // 映射 dispatch 到 props 上
 const mapDispatchToProps = dispatch => {
