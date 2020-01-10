@@ -166,6 +166,7 @@ Scroll.defaultProps = {
 
 Scroll.propTypes = {
   direction: PropTypes.oneOf(["vertical", "horizontal"]),
+  click: PropTypes.bool,
   refresh: PropTypes.bool,
   onScroll: PropTypes.func,
   pullUp: PropTypes.func,

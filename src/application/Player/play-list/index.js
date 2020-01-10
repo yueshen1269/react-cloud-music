@@ -182,6 +182,11 @@ function PlayList(props) {
     setCanTouch(state);
   };
 
+  const handleChangeCurrentIndex = index => {
+    if (currentIndex === index) return;
+    changeCurrentIndexDispatch(index);
+  };
+
   return (
     <CSSTransition
       in={showPlayList}
@@ -218,7 +223,11 @@ function PlayList(props) {
               <ListContent>
                 {playList.map((item, index) => {
                   return (
-                    <li className="item" key={item.id}>
+                    <li
+                      className="item"
+                      key={item.id}
+                      onClick={() => handleChangeCurrentIndex(index)}
+                    >
                       {getCurrentIcon(item)}
                       <span className="text">
                         {item.name} - {getName(item.ar)}
