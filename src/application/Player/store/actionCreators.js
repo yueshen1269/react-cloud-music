@@ -10,6 +10,7 @@ import {
   DELETE_SONG,
   INSERT_SONG,
 } from "./constants";
+import { getSongDetailRequest } from "../../../api/request";
 import { fromJS } from "immutable";
 
 export const changeCurrentSong = data => ({
@@ -56,3 +57,17 @@ export const deleteSong = data => ({
   type: DELETE_SONG,
   data,
 });
+
+export const insertSong = data => ({
+  type: INSERT_SONG,
+  data,
+});
+
+export const getSongDetail = id => {
+  return dispatch => {
+    getSongDetailRequest(id).then(data => {
+      let song = data.songs[0];
+      dispatch(insertSong(song));
+    });
+  };
+};
