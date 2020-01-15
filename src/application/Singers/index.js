@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
 import { connect } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import { renderRoutes } from "react-router-config";
@@ -42,15 +42,15 @@ function Singers(props) {
     // eslint-disable-next-line
   }, []);
 
-  let handleUpdateAlpha = val => {
+  let handleUpdateAlpha = useCallback(val => {
     dispatch({ type: CHANGE_ALPHA, data: val });
     updateDispatch(category, val);
-  };
+  });
 
-  let handleUpdateCategory = val => {
+  let handleUpdateCategory = useCallback(val => {
     dispatch({ type: CHANGE_CATEGORY, data: val });
     updateDispatch(val, alpha);
-  };
+  }, []);
 
   const handlePullUp = () => {
     pullUpRefreshDispatch(category, alpha, category === "", pageCount);
@@ -92,20 +92,21 @@ function Singers(props) {
       </List>
     );
   };
-
+  const handleClickCategory = useCallback(val => handleUpdateCategory(val), []);
+  const handleClickAlpha = useCallback(val => handleUpdateAlpha(val), []);
   return (
     <div>
       <NavContainer>
         <Horizen
           list={categoryTypes}
           title={"分类 (默认热门):"}
-          handleClick={val => handleUpdateCategory(val)}
+          handleClick={handleClickCategory}
           oldVal={category}
         ></Horizen>
         <Horizen
           list={alphaTypes}
           title={"首字母:"}
-          handleClick={val => handleUpdateAlpha(val)}
+          handleClick={handleClickAlpha}
           oldVal={alpha}
         ></Horizen>
       </NavContainer>
