@@ -6,6 +6,10 @@
     "tslint-react",
     "tslint-config-prettier"
   ],
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es6", "dom"]
+  },
   "jsRules": {},
   "rules": {},
   "rulesDirectory": []

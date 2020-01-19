@@ -1,9 +1,9 @@
 import { RankTypes } from "./config";
 
-export const getCount = count => {
-  if (count < 0) return;
+export const getCount: (count: number) => string = count => {
+  if (count < 0) return "";
   if (count < 10000) {
-    return count;
+    return count + "";
   } else if (Math.floor(count / 10000) < 10000) {
     return Math.floor(count / 1000) / 10 + "万";
   } else {
@@ -11,8 +11,11 @@ export const getCount = count => {
   }
 };
 
-export const debounce = (func, delay) => {
-  let timer;
+export const debounce: (
+  func: (...args: any[]) => void,
+  delay: number,
+) => (...args: any[]) => void = (func, delay) => {
+  let timer: null | NodeJS.Timeout = null;
   return function(...args) {
     if (timer) {
       clearTimeout(timer);
